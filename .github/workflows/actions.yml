@@ -29,15 +29,6 @@ jobs:
           username: zym1614511838@gmail.com
           password: zhongyiming2003
 
-      # 缓存 Docker 层
-      - name: Cache Docker layers
-        uses: actions/cache@v3
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
-
       - name: 连接阿里云
         run: |
           # 登录阿里云
@@ -53,6 +44,14 @@ jobs:
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
 
+      # 缓存 Docker 层
+      - name: Cache Docker layers
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache-new
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
 
   deployment:
     runs-on: ubuntu-latest
@@ -71,4 +70,4 @@ jobs:
             docker rm eshop_main || true
             docker login -u aliyun2526497059 -p zhongyiming2003 registry.cn-hangzhou.aliyuncs.com
             docker pull registry.cn-hangzhou.aliyuncs.com/lazyyy1/eshop_main:latest
-            docker run -d --name eshop_main -p 20000:8888 --network 47bce5c74f589f4867dbd57e9ca9f808_env-network registry.cn-hangzhou.aliyuncs.com/lazyyy1/eshop_main:latest
+            docker run -d --name eshop_main -p 20001:8888 --network 47bce5c74f589f4867dbd57e9ca9f808_env-network registry.cn-hangzhou.aliyuncs.com/lazyyy1/eshop_main:latest
