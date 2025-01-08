@@ -12,43 +12,22 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-      # 添加 Go 缓存
-      - name: Set up Go
-        uses: actions/setup-go@v4
-        with:
-          go-version: '1.21'
-          cache: true
-      
-      # 缓存 Go modules
-      - name: Go Module Cache
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cache/go-build
-            ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
-
-      # Docker 层级缓存
-      - name: Cache Docker layers
-        uses: actions/cache@v3
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
-
+  
       - name: Docker Login
         uses: docker/login-action@v3.1.0
         with:
           username: zym1614511838@gmail.com
           password: zhongyiming2003
 
+      # 使用 Buildx 构建镜像并缓存层
       - name: 构建镜像
-        run:
-          docker build -t registry.cn-hangzhou.aliyuncs.com/lazyyy1/eshop_main .
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: false
+          tags: registry.cn-hangzhou.aliyuncs.com/lazyyy1/eshop_main:latest
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
 
       - name: 连接阿里云
         run:
@@ -67,9 +46,9 @@ jobs:
           username: root
           password: F1ly6kT?
           port: 22
-          script:
-            docker stop eshop_main;
-            docker rm eshop_main;
-            docker login -u aliyun2526497059 -p zhongyiming2003 registry.cn-hangzhou.aliyuncs.com;
-            docker pull registry.cn-hangzhou.aliyuncs.com/lazyyy1/eshop_main;
-            docker run -d --name eshop_main -p 20001:8888 --network 47bce5c74f589f4867dbd57e9ca9f808_env-network registry.cn-hangzhou.aliyuncs.com/lazyyy1/eshop_main:latest;
+          script: |
+            docker stop eshop_main || true
+            docker rm eshop_main || true
+            docker login -u aliyun2526497059 -p zhongyiming2003 registry.cn-hangzhou.aliyuncs.com
+            docker pull registry.cn-hangzhou.aliyuncs.com/lazyyy1/eshop_main:latest
+            docker run -d --name eshop_main -p 20000:8888 --network 47bce5c74f589f4867dbd57e9ca9f808_env-network registry.cn-hangzhou.aliyuncs.com/lazyyy1/eshop_main:latest
