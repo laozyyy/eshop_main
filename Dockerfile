@@ -3,7 +3,7 @@ FROM golang:latest
 WORKDIR /app/demo
 COPY . .
 
-RUN go build eshop_api
+RUN go build eshop_main
 
 EXPOSE 8888
-ENTRYPOINT ["./eshop_api"]
+ENTRYPOINT ["./eshop_main"]
