@@ -50,7 +50,7 @@ jobs:
 
       - name: 连接阿里云
         run: 
-          docker login -u aliyun2526497059 -p zhongyiming2003 registry.cn-hangzhou.aliyuncs.com
+          docker login -u aliyun2526497059 -p zhongyiming2003 registry.cn-hangzhou.aliyuncs.com;
           docker push registry.cn-hangzhou.aliyuncs.com/lazyyy1/eshop_main:latest
 
   deployment:
