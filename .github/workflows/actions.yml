@@ -37,13 +37,13 @@ jobs:
           context: .
           push: true
           tags: registry.cn-hangzhou.aliyuncs.com/lazyyy1/eshop_main
-          cache-from: type=local,src=~/.buildx-cache
-          cache-to: type=local,dest=~/.buildx-cache,mode=max
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
       # 缓存 Docker 层
       - name: Cache Docker layers
         uses: actions/cache@v3
         with:
-          path: ~/.buildx-cache
+          path: /tmp/.buildx-cache
           key: ${{ runner.os }}-buildx-layers
           restore-keys: |
             ${{ runner.os }}-buildx-
