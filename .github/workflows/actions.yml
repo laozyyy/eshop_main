@@ -28,14 +28,7 @@ jobs:
           # 登录阿里云
           docker login -u aliyun2526497059 -p zhongyiming2003 registry.cn-hangzhou.aliyuncs.com
 
-      # 缓存 Docker 层
-      - name: Cache Docker layers
-        uses: actions/cache@v3
-        with:
-          path: ~/.buildx-cache
-          key: ${{ runner.os }}-buildx-layers
-          restore-keys: |
-            ${{ runner.os }}-buildx-
+      
 
       # 使用 Buildx 构建镜像并缓存层
       - name: 构建镜像
@@ -46,7 +39,14 @@ jobs:
           tags: registry.cn-hangzhou.aliyuncs.com/lazyyy1/eshop_main
           cache-from: type=local,src=~/.buildx-cache
           cache-to: type=local,dest=~/.buildx-cache,mode=max
-
+      # 缓存 Docker 层
+      - name: Cache Docker layers
+        uses: actions/cache@v3
+        with:
+          path: ~/.buildx-cache
+          key: ${{ runner.os }}-buildx-layers
+          restore-keys: |
+            ${{ runner.os }}-buildx-
 
   deployment:
     runs-on: ubuntu-latest
