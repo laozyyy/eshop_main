@@ -32,7 +32,7 @@ jobs:
       - name: Cache Docker layers
         uses: actions/cache@v3
         with:
-          path: /tmp/.buildx-cache
+          path: ~/.buildx-cache
           key: ${{ runner.os }}-buildx-layers
           restore-keys: |
             ${{ runner.os }}-buildx-
@@ -43,9 +43,9 @@ jobs:
         with:
           context: .
           push: true
-          tags: registry.cn-hangzhou.aliyuncs.com/lazyyy1/eshop_main:latest
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
+          tags: registry.cn-hangzhou.aliyuncs.com/lazyyy1/eshop_main
+          cache-from: type=local,src=~/.buildx-cache
+          cache-to: type=local,dest=~/.buildx-cache,mode=max
 
 
   deployment:
