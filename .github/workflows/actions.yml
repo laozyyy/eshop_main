@@ -42,7 +42,7 @@ jobs:
           push: true
           tags: registry.cn-hangzhou.aliyuncs.com/lazyyy1/eshop_main:latest
           cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
+          cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
 
       # 缓存 Docker 层
       - name: Cache Docker layers
