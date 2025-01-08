@@ -51,7 +51,7 @@ jobs:
       - name: 连接阿里云
         run: |
           # 登录阿里云
-          docker login --username=aliyun2526497059 registry.cn-hangzhou.aliyuncs.com
+          docker login -u aliyun2526497059 -p zhongyiming2003 registry.cn-hangzhou.aliyuncs.com
           
           # 标记镜像
           docker tag registry.cn-hangzhou.aliyuncs.com/lazyyy1/eshop_main:latest registry.cn-hangzhou.aliyuncs.com/lazyyy1/eshop_main:latest
