@@ -44,12 +44,19 @@ jobs:
         with:
           context: .
           push: false
+          tags: registry.cn-hangzhou.aliyuncs.com/lazyyy1/eshop_main:latest
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
 
       - name: 连接阿里云
-        run: 
-          docker login -u aliyun2526497059 -p zhongyiming2003 registry.cn-hangzhou.aliyuncs.com;
+        run: |
+          # 登录阿里云
+          docker login --username=aliyun2526497059 registry.cn-hangzhou.aliyuncs.com
+          
+          # 标记镜像
+          docker tag registry.cn-hangzhou.aliyuncs.com/lazyyy1/eshop_main:latest registry.cn-hangzhou.aliyuncs.com/lazyyy1/eshop_main:latest
+          
+          # 推送镜像
           docker push registry.cn-hangzhou.aliyuncs.com/lazyyy1/eshop_main:latest
 
   deployment:
