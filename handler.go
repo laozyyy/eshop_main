@@ -55,7 +55,7 @@ func (g GoodsServiceImpl) MGetSku(ctx context.Context, req *home.MGetSkuRequest)
 }
 
 func (g GoodsServiceImpl) GetRandomSku(ctx context.Context, req *home.PageRequest) (r *home.PageResponse, err error) {
-	log.Infof("请求批量获取 SKU, PageSize: %d, PageNum: %d", req.PageSize, req.PageNum)
+	log.Infof("请求批量随机获取 SKU, PageSize: %d, PageNum: %d", req.PageSize, req.PageNum)
 	skus, _, err := database.GetRandomGoodsList(nil, req.PageSize)
 	if err != nil {
 		log.Errorf("批量获取 SKU 时发生错误: %v", err)
