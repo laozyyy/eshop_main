@@ -1,9 +1,9 @@
 module eshop_main
 
-go 1.21
+go 1.23.0
 
 require (
-	github.com/cloudwego/gopkg v0.1.2
+	github.com/cloudwego/gopkg v0.1.4
 	github.com/cloudwego/kitex v0.11.3
 	github.com/sirupsen/logrus v1.9.3
 	gorm.io/driver/mysql v1.5.7
