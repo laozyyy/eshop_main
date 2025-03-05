@@ -12,7 +12,8 @@ import (
 // Client is designed to provide IDL-compatible methods with call-option parameter for kitex framework.
 type Client interface {
 	GetOneSku(ctx context.Context, sku string, callOptions ...callopt.Option) (r *home.GetOneSkuResponse, err error)
-	MGetSku(ctx context.Context, sku *home.MGetSkuRequest, callOptions ...callopt.Option) (r *home.MGetSkuResponse, err error)
+	GetRandomSku(ctx context.Context, req *home.PageRequest, callOptions ...callopt.Option) (r *home.PageResponse, err error)
+	MGetSku(ctx context.Context, sku *home.MGetSkuRequest, callOptions ...callopt.Option) (r *home.PageResponse, err error)
 }
 
 // NewClient creates a client for the service defined in IDL.
@@ -49,7 +50,12 @@ func (p *kGoodsServiceClient) GetOneSku(ctx context.Context, sku string, callOpt
 	return p.kClient.GetOneSku(ctx, sku)
 }
 
-func (p *kGoodsServiceClient) MGetSku(ctx context.Context, sku *home.MGetSkuRequest, callOptions ...callopt.Option) (r *home.MGetSkuResponse, err error) {
+func (p *kGoodsServiceClient) GetRandomSku(ctx context.Context, req *home.PageRequest, callOptions ...callopt.Option) (r *home.PageResponse, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.GetRandomSku(ctx, req)
+}
+
+func (p *kGoodsServiceClient) MGetSku(ctx context.Context, sku *home.MGetSkuRequest, callOptions ...callopt.Option) (r *home.PageResponse, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.MGetSku(ctx, sku)
 }

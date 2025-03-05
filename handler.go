@@ -37,19 +37,35 @@ func (g GoodsServiceImpl) GetOneSku(ctx context.Context, sku string) (r *home.Ge
 	}, nil
 }
 
-func (g GoodsServiceImpl) MGetSku(ctx context.Context, req *home.MGetSkuRequest) (r *home.MGetSkuResponse, err error) {
+func (g GoodsServiceImpl) MGetSku(ctx context.Context, req *home.MGetSkuRequest) (r *home.PageResponse, err error) {
 	log.Infof("请求批量获取 SKU, TagID: %s, PageSize: %d, PageNum: %d", req.TagId, req.PageSize, req.PageNum)
 	skus, isEnd, err := database.GetGoodsList(nil, req.TagId, req.PageSize, req.PageNum)
 	if err != nil {
 		log.Errorf("批量获取 SKU 时发生错误: %v", err)
-		return &home.MGetSkuResponse{}, err
+		return &home.PageResponse{}, err
 	}
 
 	log.Infof("成功获取 SKU 列表, 是否结束: %v", isEnd)
-	return &home.MGetSkuResponse{
+	return &home.PageResponse{
 		PageSize: req.PageSize,
 		PageNum:  req.PageNum,
 		IsEnd:    isEnd,
+		Sku:      skus,
+	}, nil
+}
+
+func (g GoodsServiceImpl) GetRandomSku(ctx context.Context, req *home.PageRequest) (r *home.PageResponse, err error) {
+	log.Infof("请求批量获取 SKU, PageSize: %d, PageNum: %d", req.PageSize, req.PageNum)
+	skus, _, err := database.GetRandomGoodsList(nil, req.PageSize)
+	if err != nil {
+		log.Errorf("批量获取 SKU 时发生错误: %v", err)
+		return &home.PageResponse{}, err
+	}
+
+	return &home.PageResponse{
+		PageSize: req.PageSize,
+		PageNum:  req.PageNum,
+		IsEnd:    false,
 		Sku:      skus,
 	}, nil
 }

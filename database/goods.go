@@ -2,6 +2,8 @@ package database
 
 import (
 	"eshop_main/kitex_gen/eshop/home"
+	"eshop_main/log"
+	"math/rand"
 	"strings"
 	"time"
 
@@ -73,6 +75,7 @@ func GetGoodsList(db *gorm.DB, tagID string, pageSize, pageNum int32) ([]*home.S
 		Find(&goodsList).Error
 
 	if err != nil {
+		log.Errorf("error: %v", err)
 		return nil, false, err
 	}
 
@@ -88,6 +91,45 @@ func GetGoodsList(db *gorm.DB, tagID string, pageSize, pageNum int32) ([]*home.S
 	}
 
 	return skus, isEnd, nil
+}
+
+func GetRandomGoodsList(db *gorm.DB, pageSize int32) ([]*home.Sku, bool, error) {
+	db = getDBInstance(db)
+	var goodsList []*GoodsSku
+	var maxID int
+	err := db.Model(&GoodsSku{}).
+		Select("COALESCE(MAX(id), 0)").
+		Scan(&maxID).
+		Error
+	if err != nil {
+		log.Errorf("error: %v", err)
+		return nil, false, err
+	}
+
+	var randomIDs []int
+	for i := 0; i < int(pageSize); i++ {
+		randomID := rand.Intn(maxID) + 1
+		randomIDs = append(randomIDs, randomID)
+	}
+
+	// 查询ID >= randomID 的第一条记录（避免空洞ID）
+	// todo 可能查到的数量不够pagesize
+	err = db.Model(&GoodsSku{}).
+		Where("id >= ?", randomIDs[0]).
+		Limit(int(pageSize)).
+		Find(&goodsList).
+		Error
+	if err != nil {
+		log.Errorf("error: %v", err)
+		return nil, false, err
+	}
+
+	var skus []*home.Sku
+	for _, goods := range goodsList {
+		skus = append(skus, ConvertToHomeGoodsSku(goods))
+	}
+
+	return skus, false, nil
 }
 
 func ConvertToHomeGoodsSku(goods *GoodsSku) *home.Sku {

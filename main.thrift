@@ -2,10 +2,15 @@ namespace go eshop.home
 
 service goodsService {
     GetOneSkuResponse GetOneSku(1: string sku)
-    MGetSkuResponse MGetSku(1: MGetSkuRequest sku)
+    PageResponse GetRandomSku(1: PageRequest req)
+    PageResponse MGetSku(1: MGetSkuRequest sku)
+}
+struct PageRequest {
+    1: i32 pageSize
+    2: i32 pageNum
 }
 
-struct MGetSkuResponse {
+struct PageResponse {
     1: i32 pageSize
     2: i32 pageNum
     3: bool isEnd
@@ -33,3 +38,5 @@ struct Sku {
     8: list<string> detailPic,
     9: string sellerName
 }
+
+//kitex -module eshop_main main.thrift

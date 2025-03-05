@@ -20,6 +20,13 @@ var serviceMethods = map[string]kitex.MethodInfo{
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
+	"GetRandomSku": kitex.NewMethodInfo(
+		getRandomSkuHandler,
+		newGoodsServiceGetRandomSkuArgs,
+		newGoodsServiceGetRandomSkuResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
 	"MGetSku": kitex.NewMethodInfo(
 		mGetSkuHandler,
 		newGoodsServiceMGetSkuArgs,
@@ -111,6 +118,24 @@ func newGoodsServiceGetOneSkuResult() interface{} {
 	return home.NewGoodsServiceGetOneSkuResult()
 }
 
+func getRandomSkuHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*home.GoodsServiceGetRandomSkuArgs)
+	realResult := result.(*home.GoodsServiceGetRandomSkuResult)
+	success, err := handler.(home.GoodsService).GetRandomSku(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newGoodsServiceGetRandomSkuArgs() interface{} {
+	return home.NewGoodsServiceGetRandomSkuArgs()
+}
+
+func newGoodsServiceGetRandomSkuResult() interface{} {
+	return home.NewGoodsServiceGetRandomSkuResult()
+}
+
 func mGetSkuHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
 	realArg := arg.(*home.GoodsServiceMGetSkuArgs)
 	realResult := result.(*home.GoodsServiceMGetSkuResult)
@@ -149,7 +174,17 @@ func (p *kClient) GetOneSku(ctx context.Context, sku string) (r *home.GetOneSkuR
 	return _result.GetSuccess(), nil
 }
 
-func (p *kClient) MGetSku(ctx context.Context, sku *home.MGetSkuRequest) (r *home.MGetSkuResponse, err error) {
+func (p *kClient) GetRandomSku(ctx context.Context, req *home.PageRequest) (r *home.PageResponse, err error) {
+	var _args home.GoodsServiceGetRandomSkuArgs
+	_args.Req = req
+	var _result home.GoodsServiceGetRandomSkuResult
+	if err = p.c.Call(ctx, "GetRandomSku", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) MGetSku(ctx context.Context, sku *home.MGetSkuRequest) (r *home.PageResponse, err error) {
 	var _args home.GoodsServiceMGetSkuArgs
 	_args.Sku = sku
 	var _result home.GoodsServiceMGetSkuResult

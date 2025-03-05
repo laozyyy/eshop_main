@@ -62,6 +62,28 @@ func TestMGetSku(t *testing.T) {
 	}
 }
 
+func TestRandomGetSku(t *testing.T) {
+	impl := &GoodsServiceImpl{}
+
+	// 测试分页查询
+	req := &home.PageRequest{
+		PageSize: 40,
+		PageNum:  2,
+	}
+
+	resp, err := impl.GetRandomSku(context.Background(), req)
+	if err != nil {
+		t.Errorf("GetRandomSku error: %v", err)
+		return
+	}
+	fmt.Printf("GetRandomSku response: %+v\n", resp)
+
+	// 打印每个商品的详细信息
+	for i, sku := range resp.Sku {
+		fmt.Printf("Sku %d: %+v\n", i+1, sku)
+	}
+}
+
 // 可选：添加测试数据的辅助函数
 func TestInsertTestData(t *testing.T) {
 	db := getTestDB()
