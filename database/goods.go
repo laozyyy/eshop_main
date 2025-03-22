@@ -138,6 +138,7 @@ func ConvertToHomeGoodsSku(goods *GoodsSku) *home.Sku {
 	detailPics := strings.Split(goods.DetailPic, ",")
 
 	return &home.Sku{
+		Sku:        goods.Sku,
 		GoodsId:    goods.GoodsID,
 		TagId:      goods.TagID,
 		Name:       goods.Name,
@@ -145,7 +146,6 @@ func ConvertToHomeGoodsSku(goods *GoodsSku) *home.Sku {
 		Spec:       goods.Spec,
 		ShowPic:    showPics,
 		DetailPic:  detailPics,
-		SellerId:   "", // 需要补充
 		SellerName: "", // 需要补充
 	}
 }

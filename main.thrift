@@ -28,7 +28,7 @@ struct GetOneSkuResponse {
 }
 
 struct Sku {
-    1: string sellerId,
+    1: string sku,
     2: string goodsId,
     3: string tagId,
     4: string name,

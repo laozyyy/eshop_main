@@ -967,7 +967,7 @@ func (p *Sku) FastReadField1(buf []byte) (int, error) {
 		offset += l
 		_field = v
 	}
-	p.SellerId = _field
+	p.Sku = _field
 	return offset, nil
 }
 
@@ -1144,7 +1144,7 @@ func (p *Sku) BLength() int {
 func (p *Sku) fastWriteField1(buf []byte, w thrift.NocopyWriter) int {
 	offset := 0
 	offset += thrift.Binary.WriteFieldBegin(buf[offset:], thrift.STRING, 1)
-	offset += thrift.Binary.WriteStringNocopy(buf[offset:], w, p.SellerId)
+	offset += thrift.Binary.WriteStringNocopy(buf[offset:], w, p.Sku)
 	return offset
 }
 
@@ -1221,7 +1221,7 @@ func (p *Sku) fastWriteField9(buf []byte, w thrift.NocopyWriter) int {
 func (p *Sku) field1Length() int {
 	l := 0
 	l += thrift.Binary.FieldBeginLength()
-	l += thrift.Binary.StringLengthNocopy(p.SellerId)
+	l += thrift.Binary.StringLengthNocopy(p.Sku)
 	return l
 }
 

@@ -1188,7 +1188,7 @@ func (p *GetOneSkuResponse) Field3DeepEqual(src *string) bool {
 }
 
 type Sku struct {
-	SellerId   string   `thrift:"sellerId,1" frugal:"1,default,string" json:"sellerId"`
+	Sku        string   `thrift:"sku,1" frugal:"1,default,string" json:"sku"`
 	GoodsId    string   `thrift:"goodsId,2" frugal:"2,default,string" json:"goodsId"`
 	TagId      string   `thrift:"tagId,3" frugal:"3,default,string" json:"tagId"`
 	Name       string   `thrift:"name,4" frugal:"4,default,string" json:"name"`
@@ -1206,8 +1206,8 @@ func NewSku() *Sku {
 func (p *Sku) InitDefault() {
 }
 
-func (p *Sku) GetSellerId() (v string) {
-	return p.SellerId
+func (p *Sku) GetSku() (v string) {
+	return p.Sku
 }
 
 func (p *Sku) GetGoodsId() (v string) {
@@ -1241,8 +1241,8 @@ func (p *Sku) GetDetailPic() (v []string) {
 func (p *Sku) GetSellerName() (v string) {
 	return p.SellerName
 }
-func (p *Sku) SetSellerId(val string) {
-	p.SellerId = val
+func (p *Sku) SetSku(val string) {
+	p.Sku = val
 }
 func (p *Sku) SetGoodsId(val string) {
 	p.GoodsId = val
@@ -1270,7 +1270,7 @@ func (p *Sku) SetSellerName(val string) {
 }
 
 var fieldIDToName_Sku = map[int16]string{
-	1: "sellerId",
+	1: "sku",
 	2: "goodsId",
 	3: "tagId",
 	4: "name",
@@ -1409,7 +1409,7 @@ func (p *Sku) ReadField1(iprot thrift.TProtocol) error {
 	} else {
 		_field = v
 	}
-	p.SellerId = _field
+	p.Sku = _field
 	return nil
 }
 func (p *Sku) ReadField2(iprot thrift.TProtocol) error {
@@ -1587,10 +1587,10 @@ WriteStructEndError:
 }
 
 func (p *Sku) writeField1(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("sellerId", thrift.STRING, 1); err != nil {
+	if err = oprot.WriteFieldBegin("sku", thrift.STRING, 1); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.SellerId); err != nil {
+	if err := oprot.WriteString(p.Sku); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -1769,7 +1769,7 @@ func (p *Sku) DeepEqual(ano *Sku) bool {
 	} else if p == nil || ano == nil {
 		return false
 	}
-	if !p.Field1DeepEqual(ano.SellerId) {
+	if !p.Field1DeepEqual(ano.Sku) {
 		return false
 	}
 	if !p.Field2DeepEqual(ano.GoodsId) {
@@ -1801,7 +1801,7 @@ func (p *Sku) DeepEqual(ano *Sku) bool {
 
 func (p *Sku) Field1DeepEqual(src string) bool {
 
-	if strings.Compare(p.SellerId, src) != 0 {
+	if strings.Compare(p.Sku, src) != 0 {
 		return false
 	}
 	return true
