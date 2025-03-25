@@ -115,7 +115,7 @@ func TestESSearchGoods(t *testing.T) {
 	request := &home.SearchRequest{
 		Keyword:  "阿",
 		PageSize: 10,
-		PageNum:  1,
+		PageNum:  0,
 	}
 	skus, err := impl.SearchGoods(nil, request)
 	if err != nil {
