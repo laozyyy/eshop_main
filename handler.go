@@ -73,7 +73,7 @@ func (g GoodsServiceImpl) GetRandomSku(ctx context.Context, req *home.PageReques
 func (g GoodsServiceImpl) SearchGoods(ctx context.Context, req *home.SearchRequest) (r *home.PageResponse, err error) {
 	log.Infof("商品搜索请求 关键词:%s 分页:%d/%d", req.Keyword, req.PageNum, req.PageSize)
 
-	skus, isEnd, err := database.SearchGoodsByName(nil, req.Keyword, req.PageSize, req.PageNum)
+	skus, isEnd, err := database.SearchGoodsByName(req.Keyword, req.PageSize, req.PageNum)
 	if err != nil {
 		log.Errorf("商品搜索失败 关键词:%s 错误:%v", req.Keyword, err)
 		return &home.PageResponse{}, err

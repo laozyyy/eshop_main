@@ -155,7 +155,7 @@ func ConvertToHomeGoodsSku(goods *GoodsSku) *home.Sku {
 var ErrRecordNotFound = gorm.ErrRecordNotFound
 
 // 修改现有的SearchGoodsByName实现
-func SearchGoodsByName(db *gorm.DB, keyword string, pageSize, pageNum int32) ([]*home.Sku, bool, error) {
+func SearchGoodsByName(keyword string, pageSize, pageNum int32) ([]*home.Sku, bool, error) {
 	// 使用ES客户端进行搜索
 	searchResult, err := ESClient.Search().
 		Index("goods_index").
