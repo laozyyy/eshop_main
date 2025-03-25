@@ -107,3 +107,23 @@ func TestInsertTestData(t *testing.T) {
 	}
 	fmt.Printf("Inserted test data: %+v\n", testSku)
 }
+
+func TestESSearchGoods(t *testing.T) {
+
+	// 执行搜索
+	impl := &GoodsServiceImpl{}
+	request := &home.SearchRequest{
+		Keyword:  "阿",
+		PageSize: 10,
+		PageNum:  1,
+	}
+	skus, err := impl.SearchGoods(nil, request)
+	if err != nil {
+		t.Fatalf("ES查询失败: %v", err)
+	}
+
+	for _, sku := range skus.Sku {
+		fmt.Println(sku.Sku)
+	}
+
+}

@@ -4,6 +4,7 @@ service goodsService {
     GetOneSkuResponse GetOneSku(1: string sku)
     PageResponse GetRandomSku(1: PageRequest req)
     PageResponse MGetSku(1: MGetSkuRequest sku)
+    PageResponse SearchGoods(1: SearchRequest req)
 }
 struct PageRequest {
     1: i32 pageSize
@@ -37,6 +38,12 @@ struct Sku {
     7: list<string> showPic,
     8: list<string> detailPic,
     9: string sellerName
+}
+
+struct SearchRequest {
+    1: string keyword
+    2: i32 pageSize
+    3: i32 pageNum
 }
 
 //kitex -module eshop_main main.thrift

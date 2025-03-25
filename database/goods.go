@@ -1,13 +1,15 @@
 package database
 
 import (
+	"context"
+	"encoding/json"
 	"eshop_main/kitex_gen/eshop/home"
 	"eshop_main/log"
+	"github.com/olivere/elastic/v7"
+	"gorm.io/gorm"
 	"math/rand"
 	"strings"
 	"time"
-
-	"gorm.io/gorm"
 )
 
 type GoodsSku struct {
@@ -151,3 +153,64 @@ func ConvertToHomeGoodsSku(goods *GoodsSku) *home.Sku {
 }
 
 var ErrRecordNotFound = gorm.ErrRecordNotFound
+
+// 修改现有的SearchGoodsByName实现
+func SearchGoodsByName(db *gorm.DB, keyword string, pageSize, pageNum int32) ([]*home.Sku, bool, error) {
+	// 使用ES客户端进行搜索
+	searchResult, err := ESClient.Search().
+		Index("goods_index").
+		Query(elastic.NewMatchQuery("name", keyword)).
+		From(int((pageNum - 1) * pageSize)).
+		Size(int(pageSize)).
+		Do(context.Background())
+
+	if err != nil {
+		log.Errorf("ES查询失败 关键词:%s 错误:%v", keyword, err)
+		return nil, false, err
+	}
+
+	// 解析ES结果
+	var skus []*home.Sku
+	for _, hit := range searchResult.Hits.Hits {
+		var goods GoodsSku
+		if err := json.Unmarshal(hit.Source, &goods); err != nil {
+			log.Errorf("ES数据解析失败 ID:%s 错误:%v", hit.Id, err)
+			continue
+		}
+		skus = append(skus, ConvertToHomeGoodsSku(&goods))
+	}
+
+	// 计算是否结束
+	total := searchResult.TotalHits()
+	currentCount := int64(pageNum * pageSize)
+	isEnd := currentCount >= total
+
+	return skus, isEnd, nil
+}
+
+// 在商品创建/更新时添加ES同步
+func CreateGoods(db *gorm.DB, goods *GoodsSku) error {
+	// 原有数据库操作
+	tx := db.Begin()
+	if err := tx.Create(goods).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	// 新增ES同步
+	_, err := ESClient.Index().
+		Index("goods_index").
+		Id(goods.Sku).
+		BodyJson(goods).
+		Refresh("wait_for").
+		Do(context.Background())
+
+	if err != nil {
+		tx.Rollback()
+		log.Errorf("ES同步失败 SKU:%s 错误:%v", goods.Sku, err)
+		return err
+	}
+
+	tx.Commit()
+	return nil
+}

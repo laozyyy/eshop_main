@@ -34,6 +34,13 @@ var serviceMethods = map[string]kitex.MethodInfo{
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
+	"SearchGoods": kitex.NewMethodInfo(
+		searchGoodsHandler,
+		newGoodsServiceSearchGoodsArgs,
+		newGoodsServiceSearchGoodsResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
 }
 
 var (
@@ -154,6 +161,24 @@ func newGoodsServiceMGetSkuResult() interface{} {
 	return home.NewGoodsServiceMGetSkuResult()
 }
 
+func searchGoodsHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*home.GoodsServiceSearchGoodsArgs)
+	realResult := result.(*home.GoodsServiceSearchGoodsResult)
+	success, err := handler.(home.GoodsService).SearchGoods(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newGoodsServiceSearchGoodsArgs() interface{} {
+	return home.NewGoodsServiceSearchGoodsArgs()
+}
+
+func newGoodsServiceSearchGoodsResult() interface{} {
+	return home.NewGoodsServiceSearchGoodsResult()
+}
+
 type kClient struct {
 	c client.Client
 }
@@ -189,6 +214,16 @@ func (p *kClient) MGetSku(ctx context.Context, sku *home.MGetSkuRequest) (r *hom
 	_args.Sku = sku
 	var _result home.GoodsServiceMGetSkuResult
 	if err = p.c.Call(ctx, "MGetSku", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) SearchGoods(ctx context.Context, req *home.SearchRequest) (r *home.PageResponse, err error) {
+	var _args home.GoodsServiceSearchGoodsArgs
+	_args.Req = req
+	var _result home.GoodsServiceSearchGoodsResult
+	if err = p.c.Call(ctx, "SearchGoods", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

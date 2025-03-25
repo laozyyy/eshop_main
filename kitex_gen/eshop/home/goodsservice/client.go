@@ -14,6 +14,7 @@ type Client interface {
 	GetOneSku(ctx context.Context, sku string, callOptions ...callopt.Option) (r *home.GetOneSkuResponse, err error)
 	GetRandomSku(ctx context.Context, req *home.PageRequest, callOptions ...callopt.Option) (r *home.PageResponse, err error)
 	MGetSku(ctx context.Context, sku *home.MGetSkuRequest, callOptions ...callopt.Option) (r *home.PageResponse, err error)
+	SearchGoods(ctx context.Context, req *home.SearchRequest, callOptions ...callopt.Option) (r *home.PageResponse, err error)
 }
 
 // NewClient creates a client for the service defined in IDL.
@@ -58,4 +59,9 @@ func (p *kGoodsServiceClient) GetRandomSku(ctx context.Context, req *home.PageRe
 func (p *kGoodsServiceClient) MGetSku(ctx context.Context, sku *home.MGetSkuRequest, callOptions ...callopt.Option) (r *home.PageResponse, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.MGetSku(ctx, sku)
+}
+
+func (p *kGoodsServiceClient) SearchGoods(ctx context.Context, req *home.SearchRequest, callOptions ...callopt.Option) (r *home.PageResponse, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.SearchGoods(ctx, req)
 }
