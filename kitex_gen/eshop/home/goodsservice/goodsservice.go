@@ -34,6 +34,13 @@ var serviceMethods = map[string]kitex.MethodInfo{
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
+	"GetPrice": kitex.NewMethodInfo(
+		getPriceHandler,
+		newGoodsServiceGetPriceArgs,
+		newGoodsServiceGetPriceResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
 	"SearchGoods": kitex.NewMethodInfo(
 		searchGoodsHandler,
 		newGoodsServiceSearchGoodsArgs,
@@ -161,6 +168,24 @@ func newGoodsServiceMGetSkuResult() interface{} {
 	return home.NewGoodsServiceMGetSkuResult()
 }
 
+func getPriceHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*home.GoodsServiceGetPriceArgs)
+	realResult := result.(*home.GoodsServiceGetPriceResult)
+	success, err := handler.(home.GoodsService).GetPrice(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = &success
+	return nil
+}
+func newGoodsServiceGetPriceArgs() interface{} {
+	return home.NewGoodsServiceGetPriceArgs()
+}
+
+func newGoodsServiceGetPriceResult() interface{} {
+	return home.NewGoodsServiceGetPriceResult()
+}
+
 func searchGoodsHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
 	realArg := arg.(*home.GoodsServiceSearchGoodsArgs)
 	realResult := result.(*home.GoodsServiceSearchGoodsResult)
@@ -214,6 +239,16 @@ func (p *kClient) MGetSku(ctx context.Context, sku *home.MGetSkuRequest) (r *hom
 	_args.Sku = sku
 	var _result home.GoodsServiceMGetSkuResult
 	if err = p.c.Call(ctx, "MGetSku", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) GetPrice(ctx context.Context, req *home.GetPriceRequest) (r string, err error) {
+	var _args home.GoodsServiceGetPriceArgs
+	_args.Req = req
+	var _result home.GoodsServiceGetPriceResult
+	if err = p.c.Call(ctx, "GetPrice", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

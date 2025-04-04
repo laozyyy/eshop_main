@@ -4,7 +4,11 @@ service goodsService {
     GetOneSkuResponse GetOneSku(1: string sku)
     PageResponse GetRandomSku(1: PageRequest req)
     PageResponse MGetSku(1: MGetSkuRequest sku)
+    string GetPrice(1: GetPriceRequest req)
     PageResponse SearchGoods(1: SearchRequest req)
+}
+struct GetPriceRequest {
+    1: string sku
 }
 struct PageRequest {
     1: i32 pageSize

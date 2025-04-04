@@ -2,19 +2,38 @@ package main
 
 import (
 	"context"
+	"errors"
 	"eshop_main/database"
 	"eshop_main/kitex_gen/eshop/home"
 	"eshop_main/log"
+	"strconv"
 )
 
 type GoodsServiceImpl struct{}
+
+func (g GoodsServiceImpl) GetPrice(ctx context.Context, req *home.GetPriceRequest) (r string, err error) {
+	log.Infof("请求获取 s: %s", req.Sku)
+	goods, err := database.GetGoodsBySku(nil, req.Sku)
+	if err != nil {
+		if errors.Is(err, database.ErrRecordNotFound) {
+			log.Errorf("SKU %s 不存在: %v", req.Sku, err)
+			return "", nil
+		}
+		log.Errorf("获取 SKU %s 时发生错误: %v", req.Sku, err)
+		return "", nil
+	}
+
+	log.Infof("成功获取 SKU: %+v", goods)
+	ret := strconv.FormatFloat(goods.Price, 'f', 2, 64)
+	return ret, nil
+}
 
 func (g GoodsServiceImpl) GetOneSku(ctx context.Context, sku string) (r *home.GetOneSkuResponse, err error) {
 	log.Infof("请求获取 SKU: %s", sku)
 	goods, err := database.GetGoodsBySku(nil, sku)
 	if err != nil {
 		errStr := ""
-		if err == database.ErrRecordNotFound {
+		if errors.Is(err, database.ErrRecordNotFound) {
 			errStr = "商品不存在"
 			log.Errorf("SKU %s 不存在: %v", sku, err)
 			return &home.GetOneSkuResponse{

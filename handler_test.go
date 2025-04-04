@@ -38,7 +38,31 @@ func TestGetOneSku(t *testing.T) {
 	}
 	fmt.Printf("GetOneSku not exist response: %+v\n", resp)
 }
+func TestGetPrice(t *testing.T) {
+	impl := &GoodsServiceImpl{}
 
+	// 测试存在的SKU
+	req := &home.GetPriceRequest{
+		Sku: "664325c2-4549-49ee-bfca-186376e6efeb",
+	}
+	resp, err := impl.GetPrice(context.Background(), req)
+	if err != nil {
+		t.Errorf("GetOneSku error: %v", err)
+		return
+	}
+	fmt.Printf("GetOneSku response: %+v\n", resp)
+
+	// 测试不存在的SKU
+	req = &home.GetPriceRequest{
+		Sku: "asdsada",
+	}
+	resp, err = impl.GetPrice(context.Background(), req)
+	if err != nil {
+		t.Errorf("GetOneSku error: %v", err)
+		return
+	}
+	fmt.Printf("GetOneSku not exist response: %+v\n", resp)
+}
 func TestMGetSku(t *testing.T) {
 	impl := &GoodsServiceImpl{}
 
