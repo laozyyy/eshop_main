@@ -26,10 +26,10 @@ const goodsMapping = `{
 }`
 
 func init() {
-	err := InitES()
-	if err != nil {
-		panic(err)
-	}
+	_ = InitES()
+	//if err != nil {
+	//	panic(err)
+	//}
 }
 
 func InitES() error {

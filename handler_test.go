@@ -43,7 +43,7 @@ func TestGetPrice(t *testing.T) {
 
 	// 测试存在的SKU
 	req := &home.GetPriceRequest{
-		Sku: "664325c2-4549-49ee-bfca-186376e6efeb",
+		Sku: "261311",
 	}
 	resp, err := impl.GetPrice(context.Background(), req)
 	if err != nil {
