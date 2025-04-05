@@ -144,7 +144,7 @@ func ConvertToHomeGoodsSku(goods *GoodsSku) *home.Sku {
 		GoodsId:    goods.GoodsID,
 		TagId:      goods.TagID,
 		Name:       goods.Name,
-		Price:      int32(goods.Price * 100), // 转换为分为单位的整数
+		Price:      int32(goods.Price), // 转换为分为单位的整数
 		Spec:       goods.Spec,
 		ShowPic:    showPics,
 		DetailPic:  detailPics,
