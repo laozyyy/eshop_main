@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"eshop_main/database"
+	"eshop_main/handler"
 	"eshop_main/kitex_gen/eshop/home"
 	"fmt"
 	"gorm.io/driver/mysql"
@@ -20,7 +21,7 @@ func getTestDB() *gorm.DB {
 }
 
 func TestGetOneSku(t *testing.T) {
-	impl := &GoodsServiceImpl{}
+	impl := &handler.GoodsServiceImpl{}
 
 	// 测试存在的SKU
 	resp, err := impl.GetOneSku(context.Background(), "261311")
@@ -39,7 +40,7 @@ func TestGetOneSku(t *testing.T) {
 	fmt.Printf("GetOneSku not exist response: %+v\n", resp)
 }
 func TestGetPrice(t *testing.T) {
-	impl := &GoodsServiceImpl{}
+	impl := &handler.GoodsServiceImpl{}
 
 	// 测试存在的SKU
 	req := &home.GetPriceRequest{
@@ -64,7 +65,7 @@ func TestGetPrice(t *testing.T) {
 	fmt.Printf("GetOneSku not exist response: %+v\n", resp)
 }
 func TestMGetSku(t *testing.T) {
-	impl := &GoodsServiceImpl{}
+	impl := &handler.GoodsServiceImpl{}
 
 	// 测试分页查询
 	req := &home.MGetSkuRequest{
@@ -87,7 +88,7 @@ func TestMGetSku(t *testing.T) {
 }
 
 func TestRandomGetSku(t *testing.T) {
-	impl := &GoodsServiceImpl{}
+	impl := &handler.GoodsServiceImpl{}
 
 	// 测试分页查询
 	req := &home.PageRequest{
@@ -135,7 +136,7 @@ func TestInsertTestData(t *testing.T) {
 func TestESSearchGoods(t *testing.T) {
 
 	// 执行搜索
-	impl := &GoodsServiceImpl{}
+	impl := &handler.GoodsServiceImpl{}
 	request := &home.SearchRequest{
 		Keyword:  "阿",
 		PageSize: 10,

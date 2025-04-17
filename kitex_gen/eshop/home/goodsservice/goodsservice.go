@@ -34,6 +34,13 @@ var serviceMethods = map[string]kitex.MethodInfo{
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
+	"SearchGoods": kitex.NewMethodInfo(
+		searchGoodsHandler,
+		newGoodsServiceSearchGoodsArgs,
+		newGoodsServiceSearchGoodsResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
 	"GetPrice": kitex.NewMethodInfo(
 		getPriceHandler,
 		newGoodsServiceGetPriceArgs,
@@ -41,10 +48,17 @@ var serviceMethods = map[string]kitex.MethodInfo{
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
-	"SearchGoods": kitex.NewMethodInfo(
-		searchGoodsHandler,
-		newGoodsServiceSearchGoodsArgs,
-		newGoodsServiceSearchGoodsResult,
+	"SubmitSeckillOrder": kitex.NewMethodInfo(
+		submitSeckillOrderHandler,
+		newGoodsServiceSubmitSeckillOrderArgs,
+		newGoodsServiceSubmitSeckillOrderResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
+	"DrawLottery": kitex.NewMethodInfo(
+		drawLotteryHandler,
+		newGoodsServiceDrawLotteryArgs,
+		newGoodsServiceDrawLotteryResult,
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
@@ -168,6 +182,24 @@ func newGoodsServiceMGetSkuResult() interface{} {
 	return home.NewGoodsServiceMGetSkuResult()
 }
 
+func searchGoodsHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*home.GoodsServiceSearchGoodsArgs)
+	realResult := result.(*home.GoodsServiceSearchGoodsResult)
+	success, err := handler.(home.GoodsService).SearchGoods(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newGoodsServiceSearchGoodsArgs() interface{} {
+	return home.NewGoodsServiceSearchGoodsArgs()
+}
+
+func newGoodsServiceSearchGoodsResult() interface{} {
+	return home.NewGoodsServiceSearchGoodsResult()
+}
+
 func getPriceHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
 	realArg := arg.(*home.GoodsServiceGetPriceArgs)
 	realResult := result.(*home.GoodsServiceGetPriceResult)
@@ -186,22 +218,40 @@ func newGoodsServiceGetPriceResult() interface{} {
 	return home.NewGoodsServiceGetPriceResult()
 }
 
-func searchGoodsHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
-	realArg := arg.(*home.GoodsServiceSearchGoodsArgs)
-	realResult := result.(*home.GoodsServiceSearchGoodsResult)
-	success, err := handler.(home.GoodsService).SearchGoods(ctx, realArg.Req)
+func submitSeckillOrderHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*home.GoodsServiceSubmitSeckillOrderArgs)
+	realResult := result.(*home.GoodsServiceSubmitSeckillOrderResult)
+	success, err := handler.(home.GoodsService).SubmitSeckillOrder(ctx, realArg.Req)
 	if err != nil {
 		return err
 	}
 	realResult.Success = success
 	return nil
 }
-func newGoodsServiceSearchGoodsArgs() interface{} {
-	return home.NewGoodsServiceSearchGoodsArgs()
+func newGoodsServiceSubmitSeckillOrderArgs() interface{} {
+	return home.NewGoodsServiceSubmitSeckillOrderArgs()
 }
 
-func newGoodsServiceSearchGoodsResult() interface{} {
-	return home.NewGoodsServiceSearchGoodsResult()
+func newGoodsServiceSubmitSeckillOrderResult() interface{} {
+	return home.NewGoodsServiceSubmitSeckillOrderResult()
+}
+
+func drawLotteryHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*home.GoodsServiceDrawLotteryArgs)
+	realResult := result.(*home.GoodsServiceDrawLotteryResult)
+	success, err := handler.(home.GoodsService).DrawLottery(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newGoodsServiceDrawLotteryArgs() interface{} {
+	return home.NewGoodsServiceDrawLotteryArgs()
+}
+
+func newGoodsServiceDrawLotteryResult() interface{} {
+	return home.NewGoodsServiceDrawLotteryResult()
 }
 
 type kClient struct {
@@ -244,6 +294,16 @@ func (p *kClient) MGetSku(ctx context.Context, sku *home.MGetSkuRequest) (r *hom
 	return _result.GetSuccess(), nil
 }
 
+func (p *kClient) SearchGoods(ctx context.Context, req *home.SearchRequest) (r *home.PageResponse, err error) {
+	var _args home.GoodsServiceSearchGoodsArgs
+	_args.Req = req
+	var _result home.GoodsServiceSearchGoodsResult
+	if err = p.c.Call(ctx, "SearchGoods", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
 func (p *kClient) GetPrice(ctx context.Context, req *home.GetPriceRequest) (r string, err error) {
 	var _args home.GoodsServiceGetPriceArgs
 	_args.Req = req
@@ -254,11 +314,21 @@ func (p *kClient) GetPrice(ctx context.Context, req *home.GetPriceRequest) (r st
 	return _result.GetSuccess(), nil
 }
 
-func (p *kClient) SearchGoods(ctx context.Context, req *home.SearchRequest) (r *home.PageResponse, err error) {
-	var _args home.GoodsServiceSearchGoodsArgs
+func (p *kClient) SubmitSeckillOrder(ctx context.Context, req *home.SeckillRequest) (r *home.SeckillResponse, err error) {
+	var _args home.GoodsServiceSubmitSeckillOrderArgs
 	_args.Req = req
-	var _result home.GoodsServiceSearchGoodsResult
-	if err = p.c.Call(ctx, "SearchGoods", &_args, &_result); err != nil {
+	var _result home.GoodsServiceSubmitSeckillOrderResult
+	if err = p.c.Call(ctx, "SubmitSeckillOrder", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) DrawLottery(ctx context.Context, req *home.LotteryRequest) (r *home.LotteryResponse, err error) {
+	var _args home.GoodsServiceDrawLotteryArgs
+	_args.Req = req
+	var _result home.GoodsServiceDrawLotteryResult
+	if err = p.c.Call(ctx, "DrawLottery", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil
