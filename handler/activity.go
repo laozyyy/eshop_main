@@ -22,7 +22,7 @@ func (g GoodsServiceImpl) SubmitSeckillOrder(ctx context.Context, req *home.Seck
 	surplusKey := getSecKillSurplusKey(req.ActivityId)
 	err := cacheSecKillSurplus(ctx, req.ActivityId, req.Sku)
 	if err != nil {
-		log.Errorf("写入缓存失败")
+		log.Errorf("写入缓存失败 error: %d", err)
 		return &home.SeckillResponse{
 			Info: "内部错误",
 		}, nil
@@ -58,6 +58,9 @@ func cacheSecKillSurplus(ctx context.Context, aId string, sku string) error {
 	if exist == 0 {
 		surplus, err := database.GetSurplus(nil, sku)
 		if err != nil {
+			if err != nil {
+				log.Errorf("error: %d", err)
+			}
 			return err
 		}
 		if surplus == "" {
