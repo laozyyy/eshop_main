@@ -27,7 +27,7 @@ const goodsMapping = `{
 
 func init() {
 	//todo 这里备注掉了
-	//_ = InitES()
+	_ = InitES()
 	//if err != nil {
 	//	panic(err)
 	//}
